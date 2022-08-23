@@ -1,21 +1,18 @@
 package com.cretin.www.lotteryhelper.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,11 +24,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.cretin.www.httpurlconnectionutil.HttpUtils;
 import com.cretin.www.httpurlconnectionutil.callback.HttpCallbackStringListener;
 import com.cretin.www.lotteryhelper.R;
@@ -48,8 +49,6 @@ import com.cretin.www.lotteryhelper.utils.LocalStorageKeys;
 import com.cretin.www.lotteryhelper.utils.RecognizeService;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -93,48 +92,44 @@ public class MainActivity extends BaseActicity {
         initData();
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void initData() {
         list = new ArrayList<>();
         recyclerview.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerview.setLayoutManager(linearLayoutManager);
         adapter = new ListAdapter(this, list);
-        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        adapter.setNotDoAnimationCount(2);
-        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                //获取到当前点击的视图的数据
-                currPosition = position;
-                int index = Integer.parseInt(((TextView) view).getText().toString());
-                if (view.getId() != R.id.tv_no7) {
-                    initDatePickerRed(index);
-                } else {
-                    initDatePickerBlue(index);
-                }
-                switch (view.getId()) {
-                    case R.id.tv_no1:
-                        currIndex = 1;
-                        break;
-                    case R.id.tv_no2:
-                        currIndex = 2;
-                        break;
-                    case R.id.tv_no3:
-                        currIndex = 3;
-                        break;
-                    case R.id.tv_no4:
-                        currIndex = 4;
-                        break;
-                    case R.id.tv_no5:
-                        currIndex = 5;
-                        break;
-                    case R.id.tv_no6:
-                        currIndex = 6;
-                        break;
-                    case R.id.tv_no7:
-                        currIndex = 7;
-                        break;
-                }
+        adapter.setOnItemChildClickListener((adapter, view, position) -> {
+            //获取到当前点击的视图的数据
+            currPosition = position;
+            int index = Integer.parseInt(((TextView) view).getText().toString());
+            if (view.getId() != R.id.tv_no7) {
+                initDatePickerRed(index);
+            } else {
+                initDatePickerBlue(index);
+            }
+            switch (view.getId()) {
+                case R.id.tv_no1:
+                    currIndex = 1;
+                    break;
+                case R.id.tv_no2:
+                    currIndex = 2;
+                    break;
+                case R.id.tv_no3:
+                    currIndex = 3;
+                    break;
+                case R.id.tv_no4:
+                    currIndex = 4;
+                    break;
+                case R.id.tv_no5:
+                    currIndex = 5;
+                    break;
+                case R.id.tv_no6:
+                    currIndex = 6;
+                    break;
+                case R.id.tv_no7:
+                    currIndex = 7;
+                    break;
             }
         });
 
@@ -217,13 +212,6 @@ public class MainActivity extends BaseActicity {
                 helper.setText(R.id.tv_no7, item.getNo7());
                 helper.setText(R.id.tv_num, item.getNum());
 
-                helper.addOnClickListener(R.id.tv_no1);
-                helper.addOnClickListener(R.id.tv_no2);
-                helper.addOnClickListener(R.id.tv_no3);
-                helper.addOnClickListener(R.id.tv_no4);
-                helper.addOnClickListener(R.id.tv_no5);
-                helper.addOnClickListener(R.id.tv_no6);
-                helper.addOnClickListener(R.id.tv_no7);
 
             } else if (item.getType() == LotteryItemModel.TYPE_STEP3) {
                 //第三步
@@ -300,7 +288,7 @@ public class MainActivity extends BaseActicity {
                             adapter.notifyDataSetChanged();
                             analyse(kjq);
                         } else {
-                            Toast.makeText(mContext, "开奖期号格式有误，格式:2018027", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "开奖期号格式有误，格式:2018027", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

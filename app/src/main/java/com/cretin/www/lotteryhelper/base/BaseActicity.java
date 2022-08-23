@@ -1,6 +1,7 @@
 package com.cretin.www.lotteryhelper.base;
 
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.cretin.www.lotteryhelper.ui.view.CustomProgressDialog;
 

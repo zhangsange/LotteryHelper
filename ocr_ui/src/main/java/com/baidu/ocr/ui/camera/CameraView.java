@@ -21,7 +21,6 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -30,6 +29,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.IntDef;
 
 /**
  * 负责，相机的管理。同时提供，裁剪遮罩功能。
